@@ -5,6 +5,6 @@
     "test:ci": "jest --coverage --coverageReporters=cobertura --coverageReporters=text"
   },
   "devDependencies": {
-    "jest": "^29.7.0"
+    "jest": "^30.5.2"
   }
 }
