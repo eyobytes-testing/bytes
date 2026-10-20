@@ -1,0 +1,26 @@
+name: CI with Coverage
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - run: npm install
+
+      - run: npm run test:ci
+
+      - name: Upload coverage
+        uses: actions/upload-code-coverage@4a7f4ad1e226171771e0eb042e3a131c34753772
+        with:
+          file: coverage/cobertura-coverage.xml
+          language: javascript
+          label: jest

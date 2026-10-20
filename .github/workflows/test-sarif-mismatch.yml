@@ -1,0 +1,19 @@
+name: Test SARIF Language Validation
+on:
+  workflow_dispatch:
+jobs:
+  upload-mismatched-sarif:
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      contents: read
+      actions: read
+    steps:
+    - uses: actions/checkout@v4
+    - name: Create SARIF with language mismatch
+      run: |
+        echo '{"version":"2.1.0","$schema":"https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json","runs":[{"tool":{"driver":{"name":"CodeQL","semanticVersion":"2.0.0","rules":[{"id":"go/duplicate-branches","shortDescription":{"text":"Duplicate branches"}},{"id":"py/print-during-import","shortDescription":{"text":"Print during import"}}]}},"results":[{"ruleId":"go/duplicate-branches","level":"warning","message":{"text":"Duplicate branches in if-else"},"locations":[{"physicalLocation":{"artifactLocation":{"uri":"main.go"},"region":{"startLine":9}}}]},{"ruleId":"py/print-during-import","level":"warning","message":{"text":"Print at module level"},"locations":[{"physicalLocation":{"artifactLocation":{"uri":"bad.py"},"region":{"startLine":2}}}]}]}]}' > mismatched.sarif
+    - uses: github/codeql-action/upload-sarif@v4
+      with:
+        sarif_file: mismatched.sarif
+        category: /language:go
